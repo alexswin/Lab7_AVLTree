@@ -26,7 +26,7 @@ int main() {
 	std::string temp; // used to store the current instruction
 	AVL* avlptr = NULL;//the AVL
 
-	for (int i = 0; i < NUM_FILES; i++) {
+	for (int i = 0; i < 1; i++) { //FIXME: i < NUM_FILES
 		ifs.open(fileArray[i]); // open the file to read from
 		ofs.open("out_" + fileArray[i]); // open the file to write to
 		avlptr = new AVL();
@@ -117,6 +117,7 @@ string BSTtoString(AVL* bst) {
 		for (; i > 0; i--) { // for each node on this level,
 			NodeInterface* nextNode = readQ.front(); // store the next node in the queue
 			nodeReader_ss << nextNode->getData() << " "; // store the data from the node into the ss
+			nodeReader_ss << "- " << nextNode->getHeight() << ", "; //FIXME: remove this line
 			if (nextNode->getLeftChild() != NULL) { // if there is a left child, push the left child into the queue
 				readQ.push(nextNode->getLeftChild());
 			}
