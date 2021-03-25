@@ -50,17 +50,21 @@ bool AVL::add(int data, Node* &subRoot) {
 	}
 	else if (data < subRoot->data) {
 		//cout << data << " < " << subRoot->data << ", trying left tree..." << endl;
-		bool returnVal = add(data, subRoot->left);
-		updateHeight(subRoot);
-		rebalance(subRoot);
-		return returnVal;
+		bool addedVal = add(data, subRoot->left);
+		if (addedVal) {
+			updateHeight(subRoot);
+			rebalance(subRoot);
+		}
+		return addedVal;
 	}
 	else if (data > subRoot->data) {
 		//cout << data << " > " << subRoot->data << ", trying right tree..." << endl;
-		bool returnVal = add(data, subRoot->right);
-		updateHeight(subRoot);
-		rebalance(subRoot);
-		return returnVal;
+		bool addedVal = add(data, subRoot->right);
+		if (addedVal) {
+			updateHeight(subRoot);
+			rebalance(subRoot);
+		}
+		return addedVal;
 	}
 	else {	//data == subRoot->data
 		//cout << data << " = " << subRoot->data << ", returing false..." << endl;
@@ -68,7 +72,7 @@ bool AVL::add(int data, Node* &subRoot) {
 	}
 }
 
-bool AVL::remove(int data, Node* &subRoot) { //FIXME
+bool AVL::remove(int data, Node* &subRoot) {
 	//cout << "In remove. Attempting to remove " << data << " from subtree with root ";
 	//if (subRoot == NULL) {cout << "NULL..." << endl;}
 	//else {cout << subRoot->data << "..." << endl;}
@@ -80,18 +84,24 @@ bool AVL::remove(int data, Node* &subRoot) { //FIXME
 
 	else if (data < subRoot->data) {
 		//cout << data << " < " << subRoot->data << ", trying left tree..." << endl;
-		return remove(data, subRoot->left);
-		//FIXME: update height
-		//FIXME: rebalance
+		bool removedVal = remove(data, subRoot->left);
+		if (removedVal) {
+			updateHeight(subRoot);
+			rebalance(subRoot);
+		}
+		return removedVal;
 	}
 
 	else if (data > subRoot->data) {
 		//cout << data << " > " << subRoot->data << ", trying right tree..." << endl;
-		return remove(data, subRoot->right);
-		//FIXME: update height
-		//FIXME: rebalance
+		bool removedVal = remove(data, subRoot->right);
+		if (removedVal) {
+			updateHeight(subRoot);
+			rebalance(subRoot);
+		}
+		return removedVal;
 	}
-	//FIXME: update height, rebalance throughout the rest of this function
+	
 	else {	//data==subRoot->data (subRoot is the node to remove)
 		//cout << data << " = " << subRoot->data << ", removing..." << endl;
 		if (subRoot->left == NULL) {
@@ -102,6 +112,8 @@ bool AVL::remove(int data, Node* &subRoot) { //FIXME
 			//else {cout << subRoot->data;}
 			//cout << " and deleting " << oldNode->data << "." << endl;
 			delete oldNode;
+			// No need to update height of subRoot, but will need to update parent's height
+			// No need to rebalance subRoot, but may need to rebalance parent
 		}
 
 		else if (subRoot->right == NULL) {
@@ -112,6 +124,8 @@ bool AVL::remove(int data, Node* &subRoot) { //FIXME
 			//else {cout << subRoot->data;}
 			//cout << " and deleting " << oldNode->data << "." << endl;
 			delete oldNode;
+			// No need to update height of subRoot, but may need to update parent's height
+			// No need to rebalance subRoot, but may need to rebalance parent
 		}
 
 		else {
@@ -127,6 +141,8 @@ bool AVL::remove(int data, Node* &subRoot) { //FIXME
 			//cout << "subRoot is now " << subRoot->data << endl;
 			//cout << "Removing duplicate value from left subtree." << endl;
 			remove(subRoot->data, subRoot->left);
+			updateHeight(subRoot);
+			rebalance(subRoot);
 		}
 	//cout << "Returning true..." << endl;
 	return true;

@@ -26,7 +26,7 @@ int main() {
 	std::string temp; // used to store the current instruction
 	AVL* avlptr = NULL;//the AVL
 
-	for (int i = 0; i < 1; i++) { //FIXME: i < NUM_FILES
+	for (int i = 0; i < 2; i++) { //FIXME: i < NUM_FILES
 		ifs.open(fileArray[i]); // open the file to read from
 		ofs.open("out_" + fileArray[i]); // open the file to write to
 		avlptr = new AVL();
