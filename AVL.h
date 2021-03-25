@@ -73,13 +73,13 @@ class AVL : public AVLInterface {
 		int getBalance(Node* n);
 
 
-		void rotateLeft(Node* n);
+		void rotateLeft(Node* &n);
 
 
-		void rotateRight(Node* n);
+		void rotateRight(Node* &n);
 
 
-		bool rebalance(Node* n);
+		void rebalance(Node* &n);
 };
 
 #endif

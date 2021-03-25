@@ -52,14 +52,14 @@ bool AVL::add(int data, Node* &subRoot) {
 		//cout << data << " < " << subRoot->data << ", trying left tree..." << endl;
 		bool returnVal = add(data, subRoot->left);
 		updateHeight(subRoot);
-		//FIXME: rebalance
+		rebalance(subRoot);
 		return returnVal;
 	}
 	else if (data > subRoot->data) {
 		//cout << data << " > " << subRoot->data << ", trying right tree..." << endl;
 		bool returnVal = add(data, subRoot->right);
 		updateHeight(subRoot);
-		//FIXME: rebalance
+		rebalance(subRoot);
 		return returnVal;
 	}
 	else {	//data == subRoot->data
@@ -68,7 +68,7 @@ bool AVL::add(int data, Node* &subRoot) {
 	}
 }
 
-bool AVL::remove(int data, Node* &subRoot) {
+bool AVL::remove(int data, Node* &subRoot) { //FIXME
 	//cout << "In remove. Attempting to remove " << data << " from subtree with root ";
 	//if (subRoot == NULL) {cout << "NULL..." << endl;}
 	//else {cout << subRoot->data << "..." << endl;}
@@ -91,7 +91,7 @@ bool AVL::remove(int data, Node* &subRoot) {
 		//FIXME: update height
 		//FIXME: rebalance
 	}
-//FIXME: update height, rebalance throughout the rest of this function
+	//FIXME: update height, rebalance throughout the rest of this function
 	else {	//data==subRoot->data (subRoot is the node to remove)
 		//cout << data << " = " << subRoot->data << ", removing..." << endl;
 		if (subRoot->left == NULL) {
@@ -170,13 +170,75 @@ int AVL::updateHeight(Node* n, bool recursive) {
 }
 
 int AVL::getBalance(Node* n) {
+	if (n == NULL) {return 0;}
 	return (getHeight(n->right) - getHeight(n->left));
 }
 
-void AVL::rotateLeft(Node* n) {}
+void AVL::rotateLeft(Node* &n) {
+	if (n->right == NULL) {
+		throw "Error: Node has no right child!";
+	}
+	Node* temp = n->right;
+	n->right = temp->left;
+	temp->left = n;
+	n = temp;
+	updateHeight(n, true);
+}
 
-void AVL::rotateRight(Node* n) {}
+void AVL::rotateRight(Node* &n) {
+	if (n->left == NULL) {
+		throw "Error: Node has no left child!";
+	}
+	Node* temp = n->left;
+	n->left = temp->right;
+	temp->right = n;
+	n = temp;
+	updateHeight(n, true);
+}
 
-bool AVL::rebalance(Node* n) {}
+void AVL::rebalance(Node* &n) {
+	/*if (n == NULL) {
+		throw "Error: Cannot rebalance, node is NULL!";
+	}*/ //Unneccesary?
+	int balance = getBalance(n);
+	if (balance < -2 || balance > 2) {
+		throw "Error: Node is unbalanced by more than 2!";
+	}
+	if (balance >= -1 && balance <= 1) {
+		return; //Node is sufficiently balanced
+	}
+
+	if (balance == -2) { //Left-heavy
+		int l_balance = getBalance(n->left);
+		if (l_balance < -1 || l_balance > 1) {
+			throw "Error: Left child is unbalanced by more than 1!";
+		}
+		if (l_balance == -1 || l_balance == 0) { //Left-left tree
+			rotateRight(n);
+			return;
+		}
+		else { //Left-right tree
+			rotateLeft(n->left);
+			rotateRight(n);
+			return;
+		}
+	}
+
+	if (balance == 2) { //Right-heavy
+		int r_balance = getBalance(n->right);
+		if (r_balance < -1 || r_balance > 1) {
+			throw "Error: Right child is unbalanced by more than 1!";
+		}
+		if (r_balance == 0 || r_balance == 1) { //Right-right tree
+			rotateLeft(n);
+			return;
+		}
+		else { //Right-left tree
+			rotateRight(n->right);
+			rotateLeft(n);
+			return;
+		}
+	}
+}
 
 #endif
