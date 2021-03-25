@@ -50,15 +50,17 @@ bool AVL::add(int data, Node* &subRoot) {
 	}
 	else if (data < subRoot->data) {
 		//cout << data << " < " << subRoot->data << ", trying left tree..." << endl;
-		return add(data, subRoot->left);
-		//FIXME: update height
+		bool returnVal = add(data, subRoot->left);
+		updateHeight(subRoot);
 		//FIXME: rebalance
+		return returnVal;
 	}
 	else if (data > subRoot->data) {
 		//cout << data << " > " << subRoot->data << ", trying right tree..." << endl;
-		return add(data, subRoot->right);
-		//FIXME: update height
+		bool returnVal = add(data, subRoot->right);
+		updateHeight(subRoot);
 		//FIXME: rebalance
+		return returnVal;
 	}
 	else {	//data == subRoot->data
 		//cout << data << " = " << subRoot->data << ", returing false..." << endl;
