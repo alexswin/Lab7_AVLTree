@@ -64,7 +64,22 @@ class AVL : public AVLInterface {
 		bool remove(int data, Node* &subRoot);
 
 
-		int updateHeight(Node* n);
+		int getHeight(Node* n);
+
+
+		int updateHeight(Node* n, bool recursive = false);
+
+		
+		int getBalance(Node* n);
+
+
+		void rotateLeft(Node* n);
+
+
+		void rotateRight(Node* n);
+
+
+		bool rebalance(Node* n);
 };
 
 #endif
